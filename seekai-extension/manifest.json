@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Seekai",
+  "version": "1.0.0",
+  "description": "Intelligent search across your digital world - anime cyber command palette",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "chrome_url_overrides": {
+    "newtab": "src/newtab.html"
+  },
+  "permissions": [
+    "bookmarks",
+    "tabs",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "action": {
+    "default_popup": "src/newtab.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+K",
+        "mac": "Command+K"
+      },
+      "description": "Open Seekai command palette"
+    }
+  },
+  "options_page": "src/settings.html",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "seekai@digital.world",
+      "strict_min_version": "109.0"
+    }
+  }
+}

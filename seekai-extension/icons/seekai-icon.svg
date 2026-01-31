@@ -1,0 +1,124 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient Definitions -->
+    <linearGradient id="violetGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7C5CFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9D7FFF;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="cyanGlow" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#22D3EE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4FE3F7;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="portalGradient" x1="30%" y1="30%" x2="70%" y2="70%">
+      <stop offset="0%" style="stop-color:#7C5CFF;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#22D3EE;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#7C5CFF;stop-opacity:0.9" />
+    </linearGradient>
+    
+    <!-- Glow Filters -->
+    <filter id="violetGlowFilter" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="cyanGlowFilter" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="innerGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Dark Background -->
+  <rect width="128" height="128" fill="#0a0b1e" rx="24"/>
+  
+  <!-- Ambient Glow Background -->
+  <circle cx="64" cy="64" r="50" fill="url(#violetGlow)" opacity="0.15" filter="url(#violetGlowFilter)"/>
+  
+  <!-- Outer Portal Ring (Violet) -->
+  <circle cx="64" cy="64" r="42" 
+          fill="none" 
+          stroke="url(#violetGlow)" 
+          stroke-width="2.5" 
+          opacity="0.8"
+          filter="url(#violetGlowFilter)"/>
+  
+  <!-- Middle Portal Ring (Cyan) -->
+  <circle cx="64" cy="64" r="34" 
+          fill="none" 
+          stroke="url(#cyanGlow)" 
+          stroke-width="2" 
+          opacity="0.7"
+          filter="url(#cyanGlowFilter)"/>
+  
+  <!-- Search Icon - Magnifying Glass (Centered) -->
+  <g transform="translate(64, 64)" filter="url(#innerGlow)">
+    <!-- Lens Circle -->
+    <circle cx="-6" cy="-6" r="14" 
+            fill="none" 
+            stroke="url(#violetGlow)" 
+            stroke-width="3.5" 
+            opacity="1"/>
+    
+    <!-- Handle -->
+    <line x1="5" y1="5" x2="14" y2="14" 
+          stroke="url(#cyanGlow)" 
+          stroke-width="3.5" 
+          stroke-linecap="round"
+          opacity="1"/>
+    
+    <!-- Inner Lens Glow -->
+    <circle cx="-6" cy="-6" r="8" 
+            fill="url(#portalGradient)" 
+            opacity="0.3"/>
+  </g>
+  
+  <!-- Orbital Particles (Anime-style accents) -->
+  <g opacity="0.9">
+    <!-- Top particle (Violet) -->
+    <circle cx="64" cy="22" r="2.5" fill="#7C5CFF" filter="url(#violetGlowFilter)"/>
+    
+    <!-- Right particle (Cyan) -->
+    <circle cx="106" cy="64" r="2" fill="#22D3EE" filter="url(#cyanGlowFilter)"/>
+    
+    <!-- Bottom particle (Violet) -->
+    <circle cx="64" cy="106" r="2.5" fill="#7C5CFF" filter="url(#violetGlowFilter)"/>
+    
+    <!-- Left particle (Cyan) -->
+    <circle cx="22" cy="64" r="2" fill="#22D3EE" filter="url(#cyanGlowFilter)"/>
+  </g>
+  
+  <!-- Speed Lines (Minimal, elegant) -->
+  <g opacity="0.4">
+    <line x1="30" y1="30" x2="38" y2="38" stroke="#7C5CFF" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="98" y1="30" x2="90" y2="38" stroke="#22D3EE" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="30" y1="98" x2="38" y2="90" stroke="#22D3EE" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="98" y1="98" x2="90" y2="90" stroke="#7C5CFF" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Corner Border Accents (Tech aesthetic) -->
+  <g opacity="0.6" stroke-width="2" stroke-linecap="round">
+    <!-- Top-left -->
+    <path d="M 8 24 L 8 12 Q 8 8 12 8 L 24 8" stroke="url(#violetGlow)" fill="none"/>
+    <!-- Top-right -->
+    <path d="M 104 8 L 116 8 Q 120 8 120 12 L 120 24" stroke="url(#cyanGlow)" fill="none"/>
+    <!-- Bottom-right -->
+    <path d="M 120 104 L 120 116 Q 120 120 116 120 L 104 120" stroke="url(#violetGlow)" fill="none"/>
+    <!-- Bottom-left -->
+    <path d="M 24 120 L 12 120 Q 8 120 8 116 L 8 104" stroke="url(#cyanGlow)" fill="none"/>
+  </g>
+</svg>

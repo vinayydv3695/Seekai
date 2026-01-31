@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seekai</title>
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Background Elements -->
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Command Palette -->
+      <div class="command-palette">
+        <div class="search-row">
+          <button class="settings-btn-left" id="settingsBtn" title="Settings">
+            ⚙️
+          </button>
+          <div class="search-container">
+            <div class="search-icon">🔍</div>
+            <input 
+              type="text" 
+              id="searchInput" 
+              class="search-input" 
+              placeholder="Search bookmarks and tabs..."
+              autocomplete="off"
+              spellcheck="false"
+              autofocus
+            >
+          </div>
+        </div>
+
+        <!-- Results List -->
+        <div class="results-container" id="resultsContainer">
+          <div class="results-list" id="resultsList">
+            <!-- Results will be dynamically inserted here -->
+          </div>
+          <div class="no-results" id="noResults" style="display: none;">
+            <div class="no-results-icon">🔍</div>
+            <p>No matching bookmarks or tabs</p>
+            <span class="no-results-hint">Press <kbd>Enter</kbd> to search on Google instead</span>
+          </div>
+          <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-illustration">
+              <div class="empty-bookmark-icon">📚</div>
+              <div class="empty-sparkles">✨</div>
+            </div>
+            <h2 class="empty-state-title">No Bookmarks Yet</h2>
+            <p class="empty-state-text">Start building your personal collection</p>
+            <div class="empty-state-actions">
+              <button class="empty-state-btn" id="emptyStateAddBtn">
+                <span>➕</span> Add Your First Bookmark
+              </button>
+              <div class="empty-state-hint">
+                Type anything to search Google, or add bookmarks to search them here
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="footer-content">
+          <span class="footer-text">Search your bookmarks and tabs • Press <kbd>Ctrl+K</kbd> to focus</span>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Indexing data...</p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="themeManager.js"></script>
+  <script src="fuzzyEngine.js"></script>
+  <script src="dataIndex.js"></script>
+  <script src="commands.js"></script>
+  <script src="ui.js"></script>
+  <script src="newtab.js"></script>
+</body>
+</html>

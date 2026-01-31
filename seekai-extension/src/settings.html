@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seekai Settings</title>
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    /* Settings Page Specific Styles */
+    /* All theme colors come from theme.css variables */
+    
+    /* Spacing variables (non-color) */
+    :root {
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: var(--spacing-xl);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .header h1 {
+      font-size: 36px;
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section {
+      background: color-mix(in srgb, var(--surface) 70%, transparent);
+      border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-lg);
+      backdrop-filter: blur(20px);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .section-description {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .setting-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-md);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .setting-info {
+      flex: 1;
+    }
+
+    .setting-label {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .setting-hint {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+      background: var(--surface-hover);
+      border-radius: 13px;
+      cursor: pointer;
+      transition: background 0.3s;
+      border: 1px solid var(--border);
+    }
+
+    .toggle-switch.active {
+      background: var(--accent-2);
+      border-color: var(--accent-2);
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.3s;
+    }
+
+    .toggle-switch.active::after {
+      transform: translateX(24px);
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+    }
+
+    .input-group label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .input-group input,
+    .input-group select {
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      border-color: var(--accent-2);
+    }
+
+    .color-options {
+      display: flex;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-sm);
+    }
+
+    .color-option {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+
+    .color-option.selected {
+      border-color: white;
+      box-shadow: 0 0 0 2px var(--bg);
+    }
+
+    .color-option.cyan { background: var(--accent-2); }
+    .color-option.pink { background: var(--error); }
+    .color-option.violet { background: var(--accent); }
+    .color-option.green { background: var(--success); }
+
+    .button {
+      padding: 12px 24px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-md);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .button:hover {
+      background: var(--accent-2);
+      transform: translateY(-2px);
+    }
+
+    .button.secondary {
+      background: var(--surface-hover);
+      border: 1px solid var(--border);
+    }
+
+    .button.secondary:hover {
+      border-color: var(--accent-2);
+    }
+
+    .button-group {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: center;
+      margin-top: var(--spacing-xl);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: color-mix(in srgb, var(--accent) 95%, transparent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      z-index: 1000;
+      animation: slideInUp 0.3s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes slideInUp {
+      from {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .custom-commands {
+      margin-top: var(--spacing-lg);
+    }
+
+    .command-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .command-item input {
+      flex: 1;
+      padding: 8px 12px;
+      background: var(--surface-hover);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+
+
+
+    .command-item button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-weight: 600;
+    }
+
+    .command-item .delete-btn {
+      background: var(--error);
+    }
+
+    .command-item .delete-btn:hover {
+      background: color-mix(in srgb, var(--error) 80%, black);
+    }
+
+    .command-item .add-btn {
+      background: var(--success);
+    }
+
+    .command-item .add-btn:hover {
+      background: color-mix(in srgb, var(--success) 85%, black);
+    }
+
+    .add-command-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--surface-hover);
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-md);
+      color: var(--muted);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .add-command-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* Theme Selector Styles */
+    .theme-selector {
+      width: 100%;
+      padding: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .theme-selector:hover {
+      border-color: var(--accent);
+    }
+
+    .theme-selector:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 15%, transparent);
+    }
+
+    .theme-preview {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      align-items: center;
+    }
+
+    .theme-preview-color {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+    }
+
+    .theme-preview-info {
+      flex: 1;
+    }
+
+    .theme-preview-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .theme-preview-desc {
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>⚙️ Seekai Settings</h1>
+      <p>Customize your digital world search</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🔍 Search Sources</div>
+      <div class="section-description">Choose which sources to include in search results</div>
+      
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-label">Bookmarks</div>
+          <div class="setting-hint">Search through your saved bookmarks</div>
+        </div>
+        <div class="toggle-switch" id="toggleBookmarks"></div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-label">Open Tabs</div>
+          <div class="setting-hint">Search through currently open tabs</div>
+        </div>
+        <div class="toggle-switch" id="toggleTabs"></div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-info">
+          <div class="setting-label">Quick Bookmarks</div>
+          <div class="setting-hint">Include user-added bookmarks</div>
+        </div>
+        <div class="toggle-switch" id="toggleCommands"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🎨 Appearance</div>
+      <div class="section-description">Customize the look and feel</div>
+      
+      <div class="input-group">
+        <label>Visual Theme</label>
+        <select id="themeSelect" class="theme-selector">
+          <!-- Themes will be populated by JavaScript -->
+        </select>
+        <div class="theme-preview" id="themePreview"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🔖 Quick Bookmarks</div>
+      <div class="section-description">Add custom bookmarks that appear in your search</div>
+      
+      <div class="custom-commands" id="customCommandsList">
+        <!-- Custom commands will be inserted here -->
+      </div>
+
+      <button class="add-command-btn" id="addCommandBtn">+ Add a New Bookmark</button>
+    </div>
+
+    <div class="button-group">
+      <button class="button" id="saveBtn">Save Settings</button>
+      <button class="button secondary" id="resetBtn">Reset to Defaults</button>
+    </div>
+  </div>
+
+  <script src="themeManager.js"></script>
+  <script src="settings.js"></script>
+</body>
+</html>

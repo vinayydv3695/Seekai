@@ -1,0 +1,151 @@
+<svg width="512" height="192" viewBox="0 0 512 192" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient Definitions -->
+    <linearGradient id="violetGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7C5CFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9D7FFF;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="cyanGlow" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#22D3EE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4FE3F7;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7C5CFF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#22D3EE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7C5CFF;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="portalGradient" x1="30%" y1="30%" x2="70%" y2="70%">
+      <stop offset="0%" style="stop-color:#7C5CFF;stop-opacity:0.9" />
+      <stop offset="50%" style="stop-color:#22D3EE;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#7C5CFF;stop-opacity:0.9" />
+    </linearGradient>
+    
+    <!-- Glow Filters -->
+    <filter id="violetGlowFilter" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="cyanGlowFilter" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="textGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="innerGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Transparent Background -->
+  <rect width="512" height="192" fill="none"/>
+  
+  <!-- Icon Group (Left Side) -->
+  <g transform="translate(96, 96)">
+    <!-- Ambient Glow Background -->
+    <circle cx="0" cy="0" r="70" fill="url(#violetGlow)" opacity="0.12" filter="url(#violetGlowFilter)"/>
+    
+    <!-- Outer Portal Ring (Violet) -->
+    <circle cx="0" cy="0" r="60" 
+            fill="none" 
+            stroke="url(#violetGlow)" 
+            stroke-width="3.5" 
+            opacity="0.8"
+            filter="url(#violetGlowFilter)"/>
+    
+    <!-- Middle Portal Ring (Cyan) -->
+    <circle cx="0" cy="0" r="48" 
+            fill="none" 
+            stroke="url(#cyanGlow)" 
+            stroke-width="3" 
+            opacity="0.7"
+            filter="url(#cyanGlowFilter)"/>
+    
+    <!-- Search Icon - Magnifying Glass -->
+    <g filter="url(#innerGlow)">
+      <!-- Lens Circle -->
+      <circle cx="-8" cy="-8" r="20" 
+              fill="none" 
+              stroke="url(#violetGlow)" 
+              stroke-width="5" 
+              opacity="1"/>
+      
+      <!-- Handle -->
+      <line x1="7" y1="7" x2="20" y2="20" 
+            stroke="url(#cyanGlow)" 
+            stroke-width="5" 
+            stroke-linecap="round"
+            opacity="1"/>
+      
+      <!-- Inner Lens Glow -->
+      <circle cx="-8" cy="-8" r="12" 
+              fill="url(#portalGradient)" 
+              opacity="0.25"/>
+    </g>
+    
+    <!-- Orbital Particles -->
+    <g opacity="0.9">
+      <circle cx="0" cy="-60" r="3.5" fill="#7C5CFF" filter="url(#violetGlowFilter)"/>
+      <circle cx="60" cy="0" r="3" fill="#22D3EE" filter="url(#cyanGlowFilter)"/>
+      <circle cx="0" cy="60" r="3.5" fill="#7C5CFF" filter="url(#violetGlowFilter)"/>
+      <circle cx="-60" cy="0" r="3" fill="#22D3EE" filter="url(#cyanGlowFilter)"/>
+    </g>
+  </g>
+  
+  <!-- Text "Seekai" -->
+  <g transform="translate(210, 96)">
+    <text x="0" y="25" 
+          font-family="'SF Pro Display', 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif" 
+          font-size="72" 
+          font-weight="700" 
+          letter-spacing="2"
+          fill="url(#textGradient)"
+          filter="url(#textGlow)">Seekai</text>
+    
+    <!-- Subtle underline accent -->
+    <line x1="0" y1="38" x2="260" y2="38" 
+          stroke="url(#cyanGlow)" 
+          stroke-width="1.5" 
+          opacity="0.4"/>
+    
+    <!-- Tagline -->
+    <text x="2" y="55" 
+          font-family="'SF Pro Display', 'Segoe UI', system-ui, sans-serif" 
+          font-size="16" 
+          font-weight="400" 
+          letter-spacing="3"
+          fill="#7C5CFF"
+          opacity="0.7">SEARCH YOUR DIGITAL WORLD</text>
+  </g>
+  
+  <!-- Decorative Tech Elements -->
+  <g opacity="0.3">
+    <!-- Left side accent -->
+    <line x1="20" y1="96" x2="40" y2="96" stroke="#7C5CFF" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="15" cy="96" r="2" fill="#7C5CFF"/>
+    
+    <!-- Right side accent -->
+    <line x1="472" y1="96" x2="492" y2="96" stroke="#22D3EE" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="497" cy="96" r="2" fill="#22D3EE"/>
+  </g>
+</svg>
