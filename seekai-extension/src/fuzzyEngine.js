@@ -101,14 +101,29 @@ class FuzzyEngine {
 
     if (queryLen > textLen) return { score: 0, indices: [] };
 
-    // Exact match gets highest score
+    // Exact match gets highest score, but weight depends on position
     if (normalizedText.includes(query)) {
       const startIndex = normalizedText.indexOf(query);
       const indices = [];
       for (let i = 0; i < queryLen; i++) {
         indices.push(startIndex + i);
       }
-      return { score: 1.0, indices };
+
+      let score = 0.6; // Base score for exact substring (random middle word)
+
+      if (startIndex === 0) {
+        // Absolute prefix of the text
+        score = 1.0;
+      } else if (this.isWordBoundaryMatch(normalizedText, indices)) {
+        // Prefix of a word
+        score = 0.9;
+      }
+
+      // Small bonus for matching a large chunk of the text
+      const matchRatio = queryLen / textLen;
+      score += (matchRatio * 0.15);
+
+      return { score: Math.min(score, 1.0), indices };
     }
 
     // Fuzzy matching

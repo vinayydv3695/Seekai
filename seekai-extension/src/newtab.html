@@ -4,25 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seekai</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app-container">
     <!-- Background Elements -->
-    <div class="bg-gradient"></div>
-    <div class="bg-pattern"></div>
 
     <!-- Main Content -->
     <main class="main-content">
+
+
       <!-- Command Palette -->
       <div class="command-palette">
         <div class="search-row">
-          <button class="settings-btn-left" id="settingsBtn" title="Settings">
-            ⚙️
-          </button>
           <div class="search-container">
-            <div class="search-icon">🔍</div>
+            <div class="search-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
             <input 
               type="text" 
               id="searchInput" 
@@ -30,8 +30,11 @@
               placeholder="Search bookmarks and tabs..."
               autocomplete="off"
               spellcheck="false"
-              autofocus
+              autofocus="true"
             >
+            <button class="settings-btn-inside" id="settingsBtn" title="Settings">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </button>
           </div>
         </div>
 
@@ -41,20 +44,20 @@
             <!-- Results will be dynamically inserted here -->
           </div>
           <div class="no-results" id="noResults" style="display: none;">
-            <div class="no-results-icon">🔍</div>
+            <div class="no-results-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
             <p>No matching bookmarks or tabs</p>
             <span class="no-results-hint">Press <kbd>Enter</kbd> to search on Google instead</span>
           </div>
           <div class="empty-state" id="emptyState" style="display: none;">
             <div class="empty-state-illustration">
-              <div class="empty-bookmark-icon">📚</div>
-              <div class="empty-sparkles">✨</div>
+              <div class="empty-bookmark-icon"><svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon empty-icon-main"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path></svg></div>
+              <div class="empty-sparkles"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon empty-icon-sparkle"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3l1.9 5.8 1.9-5.8a2 2 0 0 1 1.3-1.3l5.8-1.9-5.8-1.9a2 2 0 0 1-1.3-1.3z"></path></svg></div>
             </div>
             <h2 class="empty-state-title">No Bookmarks Yet</h2>
             <p class="empty-state-text">Start building your personal collection</p>
             <div class="empty-state-actions">
               <button class="empty-state-btn" id="emptyStateAddBtn">
-                <span>➕</span> Add Your First Bookmark
+                <span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></span> Add Your First Bookmark
               </button>
               <div class="empty-state-hint">
                 Type anything to search Google, or add bookmarks to search them here
@@ -64,18 +67,48 @@
         </div>
       </div>
 
-      <!-- Footer -->
-      <footer class="footer">
-        <div class="footer-content">
-          <span class="footer-text">Search your bookmarks and tabs • Press <kbd>Ctrl+K</kbd> to focus</span>
-        </div>
-      </footer>
+
     </main>
+
+
 
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
       <div class="loading-spinner"></div>
       <p class="loading-text">Indexing data...</p>
+    </div>
+
+    <!-- Bookmark Context Menu -->
+    <div class="bookmark-context-menu" id="bookmarkContextMenu">
+      <div class="context-menu-item" id="contextMenuEdit">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        Edit Bookmark
+      </div>
+      <div class="context-menu-item danger" id="contextMenuDelete">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        Delete Bookmark
+      </div>
+    </div>
+
+    <!-- Edit Bookmark Modal -->
+    <div class="bookmark-modal-overlay" id="bookmarkEditModal">
+      <div class="bookmark-modal">
+        <h3 class="modal-title">Edit Bookmark</h3>
+        <div class="modal-body">
+          <div class="input-group">
+            <label for="editBookmarkTitle">Title</label>
+            <input type="text" id="editBookmarkTitle" class="modal-input" placeholder="Bookmark Title">
+          </div>
+          <div class="input-group">
+            <label for="editBookmarkUrl">URL</label>
+            <input type="text" id="editBookmarkUrl" class="modal-input" placeholder="https://example.com">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="button secondary" id="editBookmarkCancel">Cancel</button>
+          <button class="button" id="editBookmarkSave">Save</button>
+        </div>
+      </div>
     </div>
   </div>
 

@@ -16,10 +16,15 @@ class DataIndexer {
     
     this.settings = {
       enableBookmarks: true,
-      enableHistory: false,  // Disabled
       enableTabs: true,
-      enableCommands: true
+      enableCommands: true,
+      zenMode: false,
+      maxResults: '10',
+      defaultSearchEngine: 'google'
     };
+
+    this.pinnedLinks = new Set();
+    this.usageStats = {};
 
     this.lastUpdate = 0;
     this.updateInterval = 5000; // 5 seconds
@@ -40,12 +45,19 @@ class DataIndexer {
     try {
       const result = await chrome.storage.sync.get({
         enableBookmarks: true,
-        enableHistory: false,
         enableTabs: true,
-        enableCommands: true
+        enableCommands: true,
+        zenMode: false,
+        maxResults: '10',
+        defaultSearchEngine: 'google'
       });
       
       this.settings = result;
+
+      // Load pinned links and usage stats from local storage
+      const localData = await chrome.storage.local.get(['pinnedLinks', 'usageStats']);
+      this.pinnedLinks = new Set(localData.pinnedLinks || []);
+      this.usageStats = localData.usageStats || {};
     } catch (error) {
       console.error('Failed to load settings:', error);
     }
@@ -358,6 +370,31 @@ class DataIndexer {
   async forceRefresh() {
     this.lastUpdate = 0;
     return await this.indexAll();
+  }
+
+  /**
+   * Toggle pin status of a link
+   * @param {string} id - Item ID
+   */
+  async togglePin(id) {
+    if (this.pinnedLinks.has(id)) {
+      this.pinnedLinks.delete(id);
+    } else {
+      this.pinnedLinks.add(id);
+    }
+    
+    // Save to storage
+    await chrome.storage.local.set({
+      pinnedLinks: Array.from(this.pinnedLinks)
+    });
+  }
+
+  /**
+   * Check if a link is pinned
+   * @param {string} id - Item ID
+   */
+  isPinned(id) {
+    return this.pinnedLinks.has(id);
   }
 
   /**

@@ -39,18 +39,23 @@
   box-sizing: border-box;
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--bg);
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: center center;
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
 }
 
-body {
-  background: var(--bg);
-  color: var(--text);
+body::before {
+  display: none;
 }
 
 /* ===========================
@@ -61,24 +66,7 @@ body {
   height: 100vh;
   position: relative;
   overflow: hidden;
-  background: var(--bg);
-}
-
-/* Subtle background pattern */
-.bg-gradient {
-  display: none;
-}
-
-.bg-pattern {
-  position: fixed;
-  inset: 0;
-  background-image: 
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 50px 50px;
-  opacity: 0.05;
-  pointer-events: none;
-  z-index: 0;
+  background: transparent;
 }
 
 /* ===========================
@@ -94,6 +82,7 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: var(--spacing-lg);
 }
 
@@ -101,7 +90,8 @@ body {
    Command Palette (Terminal Style)
    =========================== */
 .command-palette {
-  flex: 1;
+  width: 100%;
+  max-height: 80vh;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
@@ -115,54 +105,61 @@ body {
   gap: var(--spacing-md);
 }
 
-.settings-btn-left {
+.settings-btn-inside {
   flex-shrink: 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  width: 44px;
-  height: 44px;
+  background: transparent;
+  border: none;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  color: var(--muted);
   transition: all var(--transition-fast);
-  font-size: 18px;
-  padding: 0;
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-sm);
 }
 
-.settings-btn-left:hover {
-  background: var(--bg);
-  border-color: var(--accent);
+.settings-btn-inside:hover {
+  color: var(--accent);
+  background: color-mix(in srgb, var(--surface-hover) 50%, transparent);
   transform: scale(1.05);
-  box-shadow: var(--shadow-md);
 }
 
-/* Search Container - Terminal Style */
+/* Search Container - Glassmorphic */
 .search-container {
   flex: 1;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
+  background: rgba(25, 25, 25, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 12px 20px;
   transition: all var(--transition-normal);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-lg);
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
 }
 
 .search-container:focus-within {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.1), var(--shadow-md);
+  border-color: transparent;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 50%, transparent), 0 8px 30px rgba(0,0,0,0.3);
+  background: rgba(30, 30, 30, 0.85);
 }
 
 .search-icon {
   flex-shrink: 0;
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--muted);
   opacity: 0.6;
+}
+
+.search-icon svg {
+  width: 20px;
+  height: 20px;
 }
 
 .search-input {
@@ -171,7 +168,8 @@ body {
   border: none;
   outline: none;
   color: var(--text);
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: 500;
   font-family: inherit;
   min-width: 0;
 }
@@ -194,10 +192,19 @@ body {
    =========================== */
 .results-container {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
   min-height: 0;
+  width: 100%;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
+  
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .results-container::-webkit-scrollbar {
@@ -206,6 +213,7 @@ body {
 
 .results-container::-webkit-scrollbar-track {
   background: transparent;
+  margin: 12px 0; /* Prevents scrollbar from clipping into the rounded corners */
 }
 
 .results-container::-webkit-scrollbar-thumb {
@@ -220,9 +228,8 @@ body {
 .results-list {
   display: flex;
   flex-direction: column;
-  background: var(--surface);
-  border-radius: var(--radius-md);
-  overflow: hidden;
+  width: 100%;
+  padding: 8px 0;
 }
 
 /* ===========================
@@ -232,21 +239,29 @@ body {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  padding: var(--spacing-md);
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  background: transparent;
+  border-bottom: none;
   cursor: pointer;
   transition: all var(--transition-fast);
   position: relative;
+  animation: slideIn 0.2s ease-out forwards;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .result-item:first-child {
-  border-top: 1px solid var(--border);
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border-top: none;
 }
 
 .result-item:last-child {
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
 }
 
 .result-item:hover {
@@ -260,18 +275,23 @@ body {
 }
 
 .result-icon {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 24px;
+}
+
+.result-icon svg {
+  width: 20px;
+  height: 20px;
 }
 
 .result-icon img {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
   border-radius: 4px;
 }
@@ -280,11 +300,48 @@ body {
   flex: 1;
   min-width: 0;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Pin Button */
+.pin-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  margin-left: auto;
+}
+
+.result-item:hover .pin-btn,
+.result-item.selected .pin-btn,
+.pin-btn.pinned {
+  opacity: 1;
+}
+
+.pin-btn:hover {
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  color: var(--text);
+}
+
+.pin-btn.pinned {
+  color: var(--accent);
+}
+
+.pin-btn.pinned svg {
+  fill: currentColor;
 }
 
 .result-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--text);
   white-space: nowrap;
@@ -293,36 +350,17 @@ body {
 }
 
 .result-url {
-  display: none;
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
 }
 
 .result-type {
-  flex-shrink: 0;
-  padding: 3px 8px;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  font-size: 9px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 600;
-  font-family: 'Courier New', monospace;
-}
-
-.result-type.type-bookmark { 
-  border-color: var(--accent); 
-  color: var(--accent); 
-}
-
-.result-type.type-tab { 
-  border-color: var(--accent-2); 
-  color: var(--accent-2); 
-}
-
-.result-type.type-command { 
-  border-color: var(--success); 
-  color: var(--success); 
+  display: none;
 }
 
 /* Frequency Count - Far Right */
@@ -670,4 +708,52 @@ mark.match-highlight {
   .shortcuts-grid {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
+}
+
+
+
+/* ===========================
+   Clock & Date Widget
+   =========================== */
+.clock-widget {
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.clock-time {
+  font-size: 64px;
+  font-weight: 700;
+  letter-spacing: -2px;
+  margin-bottom: var(--spacing-xs);
+  color: var(--text);
+  text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.clock-date {
+  font-size: 16px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+
+
+/* ===========================
+   SVG Icons
+   =========================== */
+.svg-icon {
+  display: inline-block;
+  vertical-align: middle;
+  stroke: currentColor;
+}
+
+.empty-icon-main,
+.empty-icon-sparkle {
+  color: var(--text);
 }

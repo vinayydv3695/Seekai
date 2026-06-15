@@ -26,8 +26,14 @@ class UIController {
       onSearch: null,
       onSelect: null,
       onRefresh: null,
-      onEnterWithNoResults: null
+      onEnterWithNoResults: null,
+      onPin: null,
+      onBookmarkEdit: null,
+      onBookmarkDelete: null
     };
+
+    // Store reference to the item being context-menu'd
+    this.contextMenuItem = null;
 
     // Debounce timer for search
     this.searchTimeout = null;
@@ -54,6 +60,16 @@ class UIController {
     this.elements.shortcutsContainer = document.getElementById('shortcutsContainer');
     this.elements.shortcutsGrid = document.getElementById('shortcutsGrid');
     this.elements.loadingOverlay = document.getElementById('loadingOverlay');
+    
+    // Context Menu & Modal
+    this.elements.contextMenu = document.getElementById('bookmarkContextMenu');
+    this.elements.contextMenuEdit = document.getElementById('contextMenuEdit');
+    this.elements.contextMenuDelete = document.getElementById('contextMenuDelete');
+    this.elements.editModal = document.getElementById('bookmarkEditModal');
+    this.elements.editTitle = document.getElementById('editBookmarkTitle');
+    this.elements.editUrl = document.getElementById('editBookmarkUrl');
+    this.elements.editCancel = document.getElementById('editBookmarkCancel');
+    this.elements.editSave = document.getElementById('editBookmarkSave');
 
     // Verify critical elements exist
     if (!this.elements.searchInput) {
@@ -78,6 +94,14 @@ class UIController {
       this.elements.searchInput.addEventListener('keydown', (e) => {
         this.handleKeyDown(e);
       });
+
+      // Aggressive auto-focus hack: If Chrome steals focus to the omnibox,
+      // the input will fire a blur event. We immediately steal it back.
+      this.elements.searchInput.addEventListener('blur', () => {
+        setTimeout(() => {
+          this.elements.searchInput.focus();
+        }, 50);
+      });
     }
 
     // Settings button (now in search bar)
@@ -96,12 +120,52 @@ class UIController {
       });
     }
 
-    // Click outside to clear selection
+    // Click outside to clear selection and hide context menu
     document.addEventListener('click', (e) => {
-      if (!e.target.closest('.result-item')) {
+      if (!e.target.closest('.result-item') && !e.target.closest('.bookmark-context-menu')) {
         this.clearSelection();
       }
+      
+      // Always hide context menu on click
+      if (this.elements.contextMenu) {
+        this.elements.contextMenu.style.display = 'none';
+      }
     });
+
+    // Context Menu Actions
+    if (this.elements.contextMenuEdit) {
+      this.elements.contextMenuEdit.addEventListener('click', () => {
+        if (this.contextMenuItem) {
+          this.openEditModal(this.contextMenuItem);
+        }
+      });
+    }
+
+    if (this.elements.contextMenuDelete) {
+      this.elements.contextMenuDelete.addEventListener('click', () => {
+        if (this.contextMenuItem && this.callbacks.onBookmarkDelete) {
+          this.callbacks.onBookmarkDelete(this.contextMenuItem);
+        }
+      });
+    }
+
+    // Modal Actions
+    if (this.elements.editCancel) {
+      this.elements.editCancel.addEventListener('click', () => {
+        this.closeEditModal();
+      });
+    }
+
+    if (this.elements.editSave) {
+      this.elements.editSave.addEventListener('click', () => {
+        if (this.contextMenuItem && this.callbacks.onBookmarkEdit) {
+          const newTitle = this.elements.editTitle.value;
+          const newUrl = this.elements.editUrl.value;
+          this.callbacks.onBookmarkEdit(this.contextMenuItem, newTitle, newUrl);
+          this.closeEditModal();
+        }
+      });
+    }
 
     // Global keyboard shortcuts and auto-focus on typing
     document.addEventListener('keydown', (e) => {
@@ -360,11 +424,11 @@ class UIController {
       img.alt = '';
       img.onerror = () => {
         img.style.display = 'none';
-        icon.textContent = this.getTypeEmoji(result.item.type);
+        icon.innerHTML = this.getTypeEmoji(result.item.type);
       };
       icon.appendChild(img);
     } else {
-      icon.textContent = result.item.icon || this.getTypeEmoji(result.item.type);
+      icon.innerHTML = result.item.icon || this.getTypeEmoji(result.item.type);
     }
 
     // Content (title only)
@@ -395,13 +459,66 @@ class UIController {
       item.appendChild(frequencyCount);
     }
 
-    // Type badge (before frequency count)
-    const type = document.createElement('div');
-    type.className = `result-type type-${result.item.type}`;
-    type.textContent = result.item.type;
-    item.appendChild(type);
+    // Pin Button
+    const pinBtn = document.createElement('button');
+    pinBtn.className = `pin-btn ${result.isPinned ? 'pinned' : ''}`;
+    pinBtn.title = result.isPinned ? 'Unpin' : 'Pin to top';
+    pinBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>';
+    
+    pinBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent item selection
+      if (this.callbacks.onPin) {
+        this.callbacks.onPin(result.item);
+      }
+    });
+    
+    item.appendChild(pinBtn);
+
+    // Right Click Context Menu (Bookmarks only)
+    if (result.item.type === 'bookmark') {
+      item.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        this.contextMenuItem = result.item;
+        
+        if (this.elements.contextMenu) {
+          this.elements.contextMenu.style.display = 'flex';
+          
+          // Ensure menu doesn't go offscreen
+          let x = e.clientX;
+          let y = e.clientY;
+          
+          if (x + 180 > window.innerWidth) x -= 180;
+          if (y + 100 > window.innerHeight) y -= 100;
+          
+          this.elements.contextMenu.style.left = `${x}px`;
+          this.elements.contextMenu.style.top = `${y}px`;
+        }
+      });
+    }
 
     return item;
+  }
+
+  /**
+   * Open the Edit Bookmark Modal
+   */
+  openEditModal(item) {
+    if (!this.elements.editModal) return;
+    this.elements.editTitle.value = item.title || '';
+    this.elements.editUrl.value = item.url || '';
+    this.elements.editModal.style.display = 'flex';
+    this.elements.editTitle.focus();
+  }
+
+  /**
+   * Close the Edit Bookmark Modal
+   */
+  closeEditModal() {
+    if (!this.elements.editModal) return;
+    this.elements.editModal.style.display = 'none';
+    this.focusSearchInput();
   }
 
   /**
@@ -411,12 +528,12 @@ class UIController {
    */
   getTypeEmoji(type) {
     const emojis = {
-      bookmark: '⭐',
-      tab: '📑',
-      history: '🕐',
-      command: '⚡'
+      bookmark: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path></svg>',
+      tab: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>',
+      history: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
+      command: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>'
     };
-    return emojis[type] || '📄';
+    return emojis[type] || '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>';
   }
 
   /**
@@ -543,11 +660,32 @@ class UIController {
   }
 
   /**
-   * Set callback for Enter key with no results
+   * Set onEnterWithNoResults callback
    * @param {Function} callback
    */
   onEnterWithNoResults(callback) {
     this.callbacks.onEnterWithNoResults = callback;
+  }
+
+  /**
+   * Set onPin callback
+   */
+  onPin(callback) {
+    this.callbacks.onPin = callback;
+  }
+
+  /**
+   * Set onBookmarkEdit callback
+   */
+  onBookmarkEdit(callback) {
+    this.callbacks.onBookmarkEdit = callback;
+  }
+
+  /**
+   * Set onBookmarkDelete callback
+   */
+  onBookmarkDelete(callback) {
+    this.callbacks.onBookmarkDelete = callback;
   }
 }
 

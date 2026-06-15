@@ -7,10 +7,12 @@ class SettingsManager {
   constructor() {
     this.settings = {
       enableBookmarks: true,
-      enableHistory: false,
       enableTabs: true,
       enableCommands: true,
-      accentColor: 'cyan',
+      theme: 'void-core',
+      defaultSearchEngine: 'google',
+      maxResults: '10',
+      zenMode: false,
       customCommands: []
     };
 
@@ -35,7 +37,10 @@ class SettingsManager {
       toggleBookmarks: document.getElementById('toggleBookmarks'),
       toggleTabs: document.getElementById('toggleTabs'),
       toggleCommands: document.getElementById('toggleCommands'),
+      toggleZenMode: document.getElementById('toggleZenMode'),
       themeSelect: document.getElementById('themeSelect'),
+      searchEngineSelect: document.getElementById('searchEngineSelect'),
+      maxResultsSelect: document.getElementById('maxResultsSelect'),
       themePreview: document.getElementById('themePreview'),
       customCommandsList: document.getElementById('customCommandsList'),
       addCommandBtn: document.getElementById('addCommandBtn'),
@@ -51,10 +56,12 @@ class SettingsManager {
     try {
       const result = await chrome.storage.sync.get({
         enableBookmarks: true,
-        enableHistory: false,
         enableTabs: true,
         enableCommands: true,
-        accentColor: 'cyan',
+        theme: 'void-core',
+        defaultSearchEngine: 'google',
+        maxResults: '10',
+        zenMode: false,
         customCommands: []
       });
       
@@ -73,6 +80,19 @@ class SettingsManager {
     this.setToggleState(this.elements.toggleBookmarks, this.settings.enableBookmarks);
     this.setToggleState(this.elements.toggleTabs, this.settings.enableTabs);
     this.setToggleState(this.elements.toggleCommands, this.settings.enableCommands);
+    this.setToggleState(this.elements.toggleZenMode, this.settings.zenMode);
+    
+    if (this.elements.themeSelect) {
+      this.elements.themeSelect.value = this.settings.theme || 'void-core';
+    }
+
+    if (this.elements.searchEngineSelect) {
+      this.elements.searchEngineSelect.value = this.settings.defaultSearchEngine || 'google';
+    }
+
+    if (this.elements.maxResultsSelect) {
+      this.elements.maxResultsSelect.value = this.settings.maxResults || '10';
+    }
 
     // Render theme selector
     this.renderThemeSelector();
@@ -87,10 +107,12 @@ class SettingsManager {
    * @param {boolean} active - Active state
    */
   setToggleState(element, active) {
-    if (active) {
-      element.classList.add('active');
-    } else {
-      element.classList.remove('active');
+    if (element) {
+      if (active) {
+        element.classList.add('active');
+      } else {
+        element.classList.remove('active');
+      }
     }
   }
 
@@ -100,20 +122,21 @@ class SettingsManager {
   renderThemeSelector() {
     // Populate theme dropdown
     const themes = themeManager.getThemes();
+    if (!this.elements.themeSelect) return;
     this.elements.themeSelect.innerHTML = '';
     
     themes.forEach(theme => {
       const option = document.createElement('option');
       option.value = theme.id;
       option.textContent = theme.name;
-      if (theme.id === themeManager.getCurrentTheme()) {
+      if (theme.id === this.settings.theme) {
         option.selected = true;
       }
       this.elements.themeSelect.appendChild(option);
     });
 
     // Render preview
-    this.renderThemePreview(themeManager.getCurrentTheme());
+    this.renderThemePreview(this.settings.theme);
   }
 
   /**
@@ -122,7 +145,7 @@ class SettingsManager {
    */
   renderThemePreview(themeId) {
     const theme = themeManager.getThemeById(themeId);
-    if (!theme) return;
+    if (!theme || !this.elements.themePreview) return;
 
     this.elements.themePreview.innerHTML = `
       <div class="theme-preview-color" style="background: ${theme.colors.primary};"></div>
@@ -138,6 +161,7 @@ class SettingsManager {
    * Render custom commands
    */
   renderCustomCommands() {
+    if (!this.elements.customCommandsList) return;
     this.elements.customCommandsList.innerHTML = '';
 
     this.settings.customCommands.forEach((command, index) => {
@@ -286,17 +310,45 @@ class SettingsManager {
       this.setToggleState(this.elements.toggleCommands, this.settings.enableCommands);
     });
 
+    // Toggle Zen Mode
+    if (this.elements.toggleZenMode) {
+      this.elements.toggleZenMode.addEventListener('click', () => {
+        this.settings.zenMode = !this.settings.zenMode;
+        this.setToggleState(this.elements.toggleZenMode, this.settings.zenMode);
+        this.saveSettings();
+      });
+    }
+
     // Theme selector
     this.elements.themeSelect.addEventListener('change', async (e) => {
       const themeId = e.target.value;
+      this.settings.theme = themeId;
       await themeManager.setTheme(themeId);
       this.renderThemePreview(themeId);
+      this.saveSettings();
     });
 
+    // Dropdown listeners
+    if (this.elements.searchEngineSelect) {
+      this.elements.searchEngineSelect.addEventListener('change', (e) => {
+        this.settings.defaultSearchEngine = e.target.value;
+        this.saveSettings();
+      });
+    }
+
+    if (this.elements.maxResultsSelect) {
+      this.elements.maxResultsSelect.addEventListener('change', (e) => {
+        this.settings.maxResults = e.target.value;
+        this.saveSettings();
+      });
+    }
+
     // Add command button
-    this.elements.addCommandBtn.addEventListener('click', () => {
-      this.addCommand();
-    });
+    if (this.elements.addCommandBtn) {
+      this.elements.addCommandBtn.addEventListener('click', () => {
+        this.addCommand();
+      });
+    }
 
     // Save button
     this.elements.saveBtn.addEventListener('click', () => {
