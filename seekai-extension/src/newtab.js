@@ -11,7 +11,8 @@
 // on new tab pages. To bypass this and autofocus our search bar, we immediately 
 // redirect to the same page with a query parameter. When a new tab has a query 
 // parameter, Chrome allows the page to keep focus!
-if (!window.location.search.includes('focus')) {
+const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+if (!isFirefox && !window.location.search.includes('focus')) {
   window.location.replace(window.location.href + '?focus=1');
 }
 
@@ -107,16 +108,24 @@ class SeekaiApp {
       }
     });
 
+    const bAPI = typeof browser !== 'undefined' ? browser : chrome;
+
     // Handle Bookmark Edit
     this.uiController.onBookmarkEdit(async (item, newTitle, newUrl) => {
       try {
-        await chrome.bookmarks.update(item.id, {
-          title: newTitle,
-          url: newUrl
+        await new Promise((resolve, reject) => {
+          bAPI.bookmarks.update(item.id, {
+            title: newTitle,
+            url: newUrl
+          }, (result) => {
+            if (bAPI.runtime.lastError) reject(bAPI.runtime.lastError);
+            else resolve(result);
+          });
         });
         await this.refreshData();
       } catch (e) {
         console.error('Failed to edit bookmark', e);
+        alert('Error saving bookmark: ' + (e.message || JSON.stringify(e)));
         this.showError('Failed to edit bookmark');
       }
     });
@@ -124,10 +133,16 @@ class SeekaiApp {
     // Handle Bookmark Delete
     this.uiController.onBookmarkDelete(async (item) => {
       try {
-        await chrome.bookmarks.remove(item.id);
+        await new Promise((resolve, reject) => {
+          bAPI.bookmarks.remove(item.id, () => {
+            if (bAPI.runtime.lastError) reject(bAPI.runtime.lastError);
+            else resolve();
+          });
+        });
         await this.refreshData();
       } catch (e) {
         console.error('Failed to delete bookmark', e);
+        alert('Error deleting bookmark: ' + (e.message || JSON.stringify(e)));
         this.showError('Failed to delete bookmark');
       }
     });
@@ -320,8 +335,12 @@ class SeekaiApp {
       const data = this.dataIndexer.getCombinedData();
       this.fuzzyEngine.setItems(data);
 
-      // Re-render
-      await this.renderInitialState();
+      // Re-render currently viewed state
+      if (this.uiController.state.searchQuery) {
+        await this.handleSearch(this.uiController.state.searchQuery);
+      } else {
+        await this.renderInitialState();
+      }
 
       this.uiController.hideLoading();
     } catch (error) {

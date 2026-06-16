@@ -304,8 +304,8 @@ body::before {
   justify-content: center;
 }
 
-/* Pin Button */
-.pin-btn {
+/* Pin and Edit Buttons */
+.pin-btn, .edit-btn {
   background: transparent;
   border: none;
   color: var(--muted);
@@ -318,16 +318,17 @@ body::before {
   cursor: pointer;
   opacity: 0;
   transition: all 0.2s ease;
-  margin-left: auto;
 }
 
 .result-item:hover .pin-btn,
 .result-item.selected .pin-btn,
-.pin-btn.pinned {
+.pin-btn.pinned,
+.result-item:hover .edit-btn,
+.result-item.selected .edit-btn {
   opacity: 1;
 }
 
-.pin-btn:hover {
+.pin-btn:hover, .edit-btn:hover {
   background: color-mix(in srgb, var(--text) 10%, transparent);
   color: var(--text);
 }
@@ -756,4 +757,159 @@ mark.match-highlight {
 .empty-icon-main,
 .empty-icon-sparkle {
   color: var(--text);
+}
+
+/* ===========================
+   Context Menu
+   =========================== */
+.bookmark-context-menu {
+  position: absolute;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 160px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: none;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.context-menu-item {
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.context-menu-item:hover {
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.context-menu-item.danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+/* ===========================
+   Edit Bookmark Modal
+   =========================== */
+.bookmark-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.bookmark-modal {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.modal-title {
+  margin: 0;
+  padding: 16px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.modal-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.modal-input:focus {
+  border-color: var(--accent);
+}
+
+.modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.modal-footer button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.modal-footer button.secondary {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--border);
+}
+
+.modal-footer button.secondary:hover {
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+  color: var(--text);
+}
+
+.modal-footer button.danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  margin-right: auto; /* pushes cancel and save to the right */
+}
+
+.modal-footer button.danger:hover {
+  background: #ef4444;
+  color: white;
+}
+
+.modal-footer button.primary {
+  background: var(--accent);
+  color: white;
+}
+
+.modal-footer button.primary:hover {
+  opacity: 0.9;
 }

@@ -69,6 +69,7 @@ class UIController {
     this.elements.editTitle = document.getElementById('editBookmarkTitle');
     this.elements.editUrl = document.getElementById('editBookmarkUrl');
     this.elements.editCancel = document.getElementById('editBookmarkCancel');
+    this.elements.editDelete = document.getElementById('editBookmarkDelete');
     this.elements.editSave = document.getElementById('editBookmarkSave');
 
     // Verify critical elements exist
@@ -98,7 +99,16 @@ class UIController {
       // Aggressive auto-focus hack: If Chrome steals focus to the omnibox,
       // the input will fire a blur event. We immediately steal it back.
       this.elements.searchInput.addEventListener('blur', () => {
+        // Do not steal focus if the edit modal is open
+        if (this.elements.editModal && this.elements.editModal.style.display === 'flex') {
+          return;
+        }
+        
         setTimeout(() => {
+          // Double check if modal opened in the meantime
+          if (this.elements.editModal && this.elements.editModal.style.display === 'flex') {
+            return;
+          }
           this.elements.searchInput.focus();
         }, 50);
       });
@@ -156,6 +166,15 @@ class UIController {
       });
     }
 
+    if (this.elements.editDelete) {
+      this.elements.editDelete.addEventListener('click', () => {
+        if (this.contextMenuItem && this.callbacks.onBookmarkDelete) {
+          this.callbacks.onBookmarkDelete(this.contextMenuItem);
+          this.closeEditModal();
+        }
+      });
+    }
+
     if (this.elements.editSave) {
       this.elements.editSave.addEventListener('click', () => {
         if (this.contextMenuItem && this.callbacks.onBookmarkEdit) {
@@ -180,7 +199,11 @@ class UIController {
       // Only capture printable characters (letters, numbers, space, etc.)
       const isPrintableKey = e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey;
       
-      if (isPrintableKey && document.activeElement !== this.elements.searchInput) {
+      // Check if the user is already focused on an input field (like the edit modal)
+      const isTypingInInput = document.activeElement && 
+        (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA');
+
+      if (isPrintableKey && !isTypingInInput && document.activeElement !== this.elements.searchInput) {
         // Focus the search input and let the character be typed
         this.elements.searchInput.focus();
         // Clear any existing text first
@@ -343,6 +366,10 @@ class UIController {
   focusSearchInput() {
     if (this.elements.searchInput) {
       this.elements.searchInput.focus();
+      // Fallback for Firefox which heavily prioritizes the address bar on new tabs
+      setTimeout(() => {
+        this.elements.searchInput.focus();
+      }, 150);
       this.elements.searchInput.select();
     }
   }
@@ -451,12 +478,18 @@ class UIController {
     item.appendChild(icon);
     item.appendChild(content);
 
-    // Frequency count (on the far right)
-    if (result.item.type === 'bookmark' && result.item.useCount && result.item.useCount > 0) {
-      const frequencyCount = document.createElement('div');
-      frequencyCount.className = 'frequency-count';
-      frequencyCount.textContent = result.item.useCount;
-      item.appendChild(frequencyCount);
+    // Edit Button (only for bookmarks)
+    if (result.item.type === 'bookmark') {
+      const editBtn = document.createElement('button');
+      editBtn.className = 'edit-btn';
+      editBtn.title = 'Edit Bookmark';
+      // Pencil SVG
+      editBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>';
+      editBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openEditModal(result.item);
+      });
+      item.appendChild(editBtn);
     }
 
     // Pin Button
@@ -473,6 +506,14 @@ class UIController {
     });
     
     item.appendChild(pinBtn);
+
+    // Frequency count (on the far right)
+    if (result.item.type === 'bookmark' && result.item.useCount && result.item.useCount > 0) {
+      const frequencyCount = document.createElement('div');
+      frequencyCount.className = 'frequency-count';
+      frequencyCount.textContent = result.item.useCount;
+      item.appendChild(frequencyCount);
+    }
 
     // Right Click Context Menu (Bookmarks only)
     if (result.item.type === 'bookmark') {
@@ -506,6 +547,7 @@ class UIController {
    */
   openEditModal(item) {
     if (!this.elements.editModal) return;
+    this.contextMenuItem = item;
     this.elements.editTitle.value = item.title || '';
     this.elements.editUrl.value = item.url || '';
     this.elements.editModal.style.display = 'flex';

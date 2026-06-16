@@ -45,12 +45,20 @@
       margin-bottom: var(--spacing-xl);
     }
 
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     .header h1 {
       font-size: 36px;
-      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      background: linear-gradient(135deg, var(--accent-2), var(--accent), var(--accent-2));
+      background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: var(--spacing-sm);
+      animation: gradient-shift 4s ease infinite;
     }
 
     .header p {
@@ -65,6 +73,13 @@
       padding: var(--spacing-lg);
       margin-bottom: var(--spacing-lg);
       backdrop-filter: blur(20px);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      border-color: color-mix(in srgb, var(--accent) 40%, transparent);
     }
 
     .section-title {
@@ -92,6 +107,13 @@
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       margin-bottom: var(--spacing-md);
+      transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .setting-item:hover {
+      background: var(--surface-hover);
+      transform: translateX(4px);
+      border-color: color-mix(in srgb, var(--accent) 30%, transparent);
     }
 
     .setting-info {
@@ -261,6 +283,36 @@
       margin-top: var(--spacing-lg);
     }
 
+    .back-btn {
+      position: fixed;
+      top: var(--spacing-xl);
+      left: var(--spacing-xl);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 18px;
+      background: color-mix(in srgb, var(--surface) 80%, transparent);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      transform: translateX(-4px);
+      box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 40%, transparent);
+    }
+
     .command-item {
       display: flex;
       align-items: center;
@@ -397,8 +449,10 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon" style="vertical-align: middle; margin-right: 8px; margin-bottom: 4px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>Seekai Settings</h1>
-      <p>Customize your digital world search</p>
+      <a href="newtab.html" class="back-btn" id="backToHomeBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        Back to Home
+      </a>
     </div>
 
     <div class="section">
@@ -419,14 +473,6 @@
           <div class="setting-hint">Search through currently open tabs</div>
         </div>
         <div class="toggle-switch" id="toggleTabs"></div>
-      </div>
-
-      <div class="setting-item">
-        <div class="setting-info">
-          <div class="setting-label">Quick Bookmarks</div>
-          <div class="setting-hint">Include user-added bookmarks</div>
-        </div>
-        <div class="toggle-switch" id="toggleCommands"></div>
       </div>
     </div>
 
@@ -477,16 +523,6 @@
       </div>
     </div>
 
-    <div class="section">
-      <div class="section-title"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path></svg> Quick Bookmarks</div>
-      <div class="section-description">Add custom bookmarks that appear in your search</div>
-      
-      <div class="custom-commands" id="customCommandsList">
-        <!-- Custom commands will be inserted here -->
-      </div>
-
-      <button class="add-command-btn" id="addCommandBtn">+ Add a New Bookmark</button>
-    </div>
 
     <div class="button-group">
       <button class="button" id="saveBtn">Save Settings</button>
