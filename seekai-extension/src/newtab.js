@@ -267,6 +267,22 @@ class SeekaiApp {
    * @param {string} query - Search query
    */
   searchWeb(query) {
+    const trimmedQuery = query.trim();
+    
+    // Check if the query is actually a URL
+    const hasProtocol = /^(https?|file|chrome|chrome-extension):\/\//i.test(trimmedQuery);
+    const looksLikeDomain = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}([:\/][^\s]*)?$/.test(trimmedQuery);
+    const isLocalhost = /^localhost(:[0-9]+)?([\/][^\s]*)?$/.test(trimmedQuery);
+
+    if (hasProtocol || looksLikeDomain || isLocalhost) {
+      let urlToOpen = trimmedQuery;
+      if (!hasProtocol) {
+        urlToOpen = (isLocalhost ? 'http://' : 'https://') + trimmedQuery;
+      }
+      window.location.href = urlToOpen;
+      return;
+    }
+
     const engine = (this.dataIndexer.settings && this.dataIndexer.settings.defaultSearchEngine) || 'google';
     let searchUrl = '';
 

@@ -260,7 +260,7 @@ class UIController {
 
       case 'Enter':
         e.preventDefault();
-        this.activateSelected();
+        this.activateSelected(e.shiftKey);
         break;
 
       case 'Escape':
@@ -333,8 +333,16 @@ class UIController {
 
   /**
    * Activate selected result
+   * @param {boolean} forceWebSearch - If true, bypass local results and force web search
    */
-  activateSelected() {
+  activateSelected(forceWebSearch = false) {
+    if (forceWebSearch && this.state.searchQuery.trim() !== '') {
+      if (this.callbacks.onEnterWithNoResults) {
+        this.callbacks.onEnterWithNoResults(this.state.searchQuery);
+      }
+      return;
+    }
+
     if (this.state.selectedIndex >= 0 && this.state.selectedIndex < this.state.results.length) {
       const selectedResult = this.state.results[this.state.selectedIndex];
       if (this.callbacks.onSelect) {
