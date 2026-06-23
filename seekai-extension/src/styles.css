@@ -59,9 +59,9 @@ body::before {
   height: 100vh;
   z-index: -1;
   background-image: 
-    radial-gradient(circle at 15% 50%, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 40%),
-    radial-gradient(circle at 85% 30%, color-mix(in srgb, var(--accent-2, var(--accent)) 10%, transparent) 0%, transparent 45%),
-    radial-gradient(circle at 50% 90%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 40%);
+    radial-gradient(circle at 15% 50%, color-mix(in srgb, var(--accent) 6%, transparent) 0%, transparent 40%),
+    radial-gradient(circle at 85% 30%, color-mix(in srgb, var(--accent-2, var(--accent)) 5%, transparent) 0%, transparent 45%),
+    radial-gradient(circle at 50% 90%, color-mix(in srgb, var(--accent) 4%, transparent) 0%, transparent 40%);
   filter: blur(80px);
   pointer-events: none;
 }
