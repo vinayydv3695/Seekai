@@ -260,6 +260,13 @@ class DataIndexer {
   getFaviconUrl(url) {
     try {
       const urlObj = new URL(url);
+      
+      // Only attempt to fetch favicons for valid http/https public domains
+      if (!['http:', 'https:'].includes(urlObj.protocol)) return '';
+      if (!urlObj.hostname.includes('.') || urlObj.hostname.match(/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/)) {
+        return '';
+      }
+      
       return `https://icon.horse/icon/${urlObj.hostname}`;
     } catch (error) {
       return '';
