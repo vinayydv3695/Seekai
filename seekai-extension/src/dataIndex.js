@@ -16,7 +16,7 @@ class DataIndexer {
     
     this.settings = {
       enableBookmarks: true,
-      enableTabs: true,
+      enableTabs: false,
       enableCommands: true,
       zenMode: false,
       maxResults: '10',
@@ -45,7 +45,7 @@ class DataIndexer {
     try {
       const result = await chrome.storage.sync.get({
         enableBookmarks: true,
-        enableTabs: true,
+        enableTabs: false,
         enableCommands: true,
         zenMode: false,
         maxResults: '10',
@@ -89,10 +89,6 @@ class DataIndexer {
 
     if (this.settings.enableTabs) {
       promises.push(this.indexTabs());
-    }
-
-    if (this.settings.enableCommands) {
-      promises.push(this.indexCommands());
     }
 
     await Promise.all(promises);
@@ -176,7 +172,7 @@ class DataIndexer {
       const tabs = await chrome.tabs.query({});
       
       this.cache.tabs = tabs
-        .filter(tab => tab.url && tab.title)
+        .filter(tab => tab.url && tab.title && tab.title !== 'Seekai' && !tab.url.includes('newtab.html'))
         .map(tab => ({
           id: tab.id,
           title: tab.title || 'Untitled',
@@ -192,71 +188,6 @@ class DataIndexer {
     } catch (error) {
       console.error('Failed to index tabs:', error);
       this.cache.tabs = [];
-    }
-  }
-
-  /**
-   * Index custom commands
-   */
-  async indexCommands() {
-    try {
-      const result = await chrome.storage.sync.get({ customCommands: [] });
-      
-      this.cache.commands = result.customCommands.map(cmd => ({
-        id: cmd.id || `cmd_${Date.now()}_${Math.random()}`,
-        title: cmd.title || cmd.name,
-        url: cmd.url || cmd.action,
-        type: 'command',
-        icon: cmd.icon || '⚡',
-        description: cmd.description || '',
-        lastVisitTime: 0
-      }));
-
-      // Add built-in commands
-      const builtInCommands = [
-        {
-          id: 'cmd_settings',
-          title: 'Settings',
-          url: 'naviko://settings',
-          type: 'command',
-          icon: '⚙️',
-          description: 'Open Seekai settings',
-          lastVisitTime: 0
-        },
-        {
-          id: 'cmd_close_tab',
-          title: 'Close Current Tab',
-          url: 'naviko://close-tab',
-          type: 'command',
-          icon: '❌',
-          description: 'Close the current browser tab',
-          lastVisitTime: 0
-        },
-        {
-          id: 'cmd_new_tab',
-          title: 'New Tab',
-          url: 'naviko://new-tab',
-          type: 'command',
-          icon: '➕',
-          description: 'Open a new browser tab',
-          lastVisitTime: 0
-        },
-        {
-          id: 'cmd_clear_history',
-          title: 'Clear History Cache',
-          url: 'naviko://clear-cache',
-          type: 'command',
-          icon: '🗑️',
-          description: 'Clear Seekai search cache',
-          lastVisitTime: 0
-        }
-      ];
-
-      this.cache.commands = [...builtInCommands, ...this.cache.commands];
-
-    } catch (error) {
-      console.error('Failed to index commands:', error);
-      this.cache.commands = [];
     }
   }
 
@@ -280,9 +211,6 @@ class DataIndexer {
         existingUrls.add(item.url);
       }
     }
-
-    // Add commands
-    combined.push(...this.cache.commands);
 
     this.cache.combined = combined;
   }
@@ -332,7 +260,7 @@ class DataIndexer {
   getFaviconUrl(url) {
     try {
       const urlObj = new URL(url);
-      return `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=32`;
+      return `https://icon.horse/icon/${urlObj.hostname}`;
     } catch (error) {
       return '';
     }

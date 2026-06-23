@@ -432,6 +432,9 @@ class UIController {
         this.updateSelection();
       });
 
+      // Add a staggered animation delay to create a smooth cascading effect
+      item.style.animationDelay = `${index * 0.08}s`;
+
       this.elements.resultsList.appendChild(item);
     });
 
@@ -453,7 +456,7 @@ class UIController {
     const icon = document.createElement('div');
     icon.className = 'result-icon';
     
-    if (result.item.icon && result.item.icon.startsWith('http')) {
+    if (result.item.icon && (result.item.icon.startsWith('http') || result.item.icon.startsWith('chrome-extension://'))) {
       const img = document.createElement('img');
       img.src = result.item.icon;
       img.alt = '';

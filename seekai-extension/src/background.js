@@ -12,7 +12,7 @@ chrome.runtime.onInstalled.addListener(async (details) => {
     await chrome.storage.sync.set({
       enableBookmarks: true,
       enableHistory: false,  // Disabled by default
-      enableTabs: true,
+      enableTabs: false,
       enableCommands: true,
       accentColor: 'cyan',
       customCommands: []
@@ -116,7 +116,7 @@ async function handleDataRequest(dataType) {
       return await chrome.storage.sync.get({
         enableBookmarks: true,
         enableHistory: false,
-        enableTabs: true,
+        enableTabs: false,
         enableCommands: true,
         accentColor: 'cyan',
         customCommands: []

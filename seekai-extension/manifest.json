@@ -15,7 +15,8 @@
   "permissions": [
     "bookmarks",
     "tabs",
-    "storage"
+    "storage",
+    "favicon"
   ],
   "background": {
     "service_worker": "src/background.js",

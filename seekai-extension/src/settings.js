@@ -7,9 +7,9 @@ class SettingsManager {
   constructor() {
     this.settings = {
       enableBookmarks: true,
-      enableTabs: true,
+      enableTabs: false,
       enableCommands: true,
-      theme: 'void-core',
+      theme: 'theme-void-core',
       defaultSearchEngine: 'google',
       maxResults: '10',
       zenMode: false,
@@ -56,9 +56,9 @@ class SettingsManager {
     try {
       const result = await chrome.storage.sync.get({
         enableBookmarks: true,
-        enableTabs: true,
+        enableTabs: false,
         enableCommands: true,
-        theme: 'void-core',
+        theme: 'theme-void-core',
         defaultSearchEngine: 'google',
         maxResults: '10',
         zenMode: false,
@@ -83,7 +83,7 @@ class SettingsManager {
     this.setToggleState(this.elements.toggleZenMode, this.settings.zenMode);
     
     if (this.elements.themeSelect) {
-      this.elements.themeSelect.value = this.settings.theme || 'void-core';
+      this.elements.themeSelect.value = this.settings.theme || 'theme-void-core';
     }
 
     if (this.elements.searchEngineSelect) {
@@ -295,20 +295,29 @@ class SettingsManager {
    */
   attachEventListeners() {
     // Toggle switches
-    this.elements.toggleBookmarks.addEventListener('click', () => {
-      this.settings.enableBookmarks = !this.settings.enableBookmarks;
-      this.setToggleState(this.elements.toggleBookmarks, this.settings.enableBookmarks);
-    });
+    if (this.elements.toggleBookmarks) {
+      this.elements.toggleBookmarks.addEventListener('click', () => {
+        this.settings.enableBookmarks = !this.settings.enableBookmarks;
+        this.setToggleState(this.elements.toggleBookmarks, this.settings.enableBookmarks);
+        this.saveSettings();
+      });
+    }
 
-    this.elements.toggleTabs.addEventListener('click', () => {
-      this.settings.enableTabs = !this.settings.enableTabs;
-      this.setToggleState(this.elements.toggleTabs, this.settings.enableTabs);
-    });
+    if (this.elements.toggleTabs) {
+      this.elements.toggleTabs.addEventListener('click', () => {
+        this.settings.enableTabs = !this.settings.enableTabs;
+        this.setToggleState(this.elements.toggleTabs, this.settings.enableTabs);
+        this.saveSettings();
+      });
+    }
 
-    this.elements.toggleCommands.addEventListener('click', () => {
-      this.settings.enableCommands = !this.settings.enableCommands;
-      this.setToggleState(this.elements.toggleCommands, this.settings.enableCommands);
-    });
+    if (this.elements.toggleCommands) {
+      this.elements.toggleCommands.addEventListener('click', () => {
+        this.settings.enableCommands = !this.settings.enableCommands;
+        this.setToggleState(this.elements.toggleCommands, this.settings.enableCommands);
+        this.saveSettings();
+      });
+    }
 
     // Toggle Zen Mode
     if (this.elements.toggleZenMode) {
@@ -405,18 +414,20 @@ class SettingsManager {
       );
 
       // Only update existing bookmarks (new ones are added via Add button)
-      const seekaiFolder = await this.ensureSeekaiFolder();
-      
-      for (const cmd of validCommands) {
-        if (cmd.bookmarkId) {
-          // Update existing bookmark
-          try {
-            await chrome.bookmarks.update(cmd.bookmarkId, {
-              title: cmd.title,
-              url: cmd.url
-            });
-          } catch (error) {
-            console.error('Failed to update bookmark:', error);
+      if (validCommands.some(cmd => cmd.bookmarkId)) {
+        const seekaiFolder = await this.ensureSeekaiFolder();
+        
+        for (const cmd of validCommands) {
+          if (cmd.bookmarkId) {
+            // Update existing bookmark
+            try {
+              await chrome.bookmarks.update(cmd.bookmarkId, {
+                title: cmd.title,
+                url: cmd.url
+              });
+            } catch (error) {
+              console.error('Failed to update bookmark:', error);
+            }
           }
         }
       }
@@ -479,7 +490,7 @@ class SettingsManager {
       const defaults = {
         enableBookmarks: true,
         enableHistory: false,
-        enableTabs: true,
+        enableTabs: false,
         enableCommands: true,
         accentColor: 'cyan',
         customCommands: []

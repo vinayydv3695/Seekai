@@ -245,9 +245,9 @@ body::before {
   cursor: pointer;
   transition: all var(--transition-fast);
   position: relative;
-  animation: slideIn 0.2s ease-out forwards;
+  animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(24px);
 }
 
 @keyframes slideIn {
