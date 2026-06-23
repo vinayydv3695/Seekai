@@ -11,7 +11,7 @@
 :root,
 body {
   /* Core Colors - Clean dark background */
-  --bg: #0a0a0a;
+  --bg: #000000;
   --surface: #1a1a1a;
   --surface-hover: #262626;
   --border: rgba(255, 255, 255, 0.1);
@@ -34,7 +34,7 @@ body {
    Modern purple & cyan - Clean professional
    =========================== */
 .theme-void-core {
-  --bg: #0a0a0a;
+  --bg: #000000;
   --surface: #1a1a1a;
   --surface-hover: #262626;
   --border: rgba(255, 255, 255, 0.1);
@@ -54,7 +54,7 @@ body {
    Pink & Purple - Elegant minimal
    =========================== */
 .theme-sakura-night {
-  --bg: #0f0a0f;
+  --bg: #000000;
   --surface: #1f151f;
   --surface-hover: #2a1f2a;
   --border: rgba(255, 105, 180, 0.15);
@@ -74,7 +74,7 @@ body {
    Cyan & Blue - Modern tech
    =========================== */
 .theme-neon-sky {
-  --bg: #0a0f1a;
+  --bg: #000000;
   --surface: #151a26;
   --surface-hover: #1f2533;
   --border: rgba(34, 211, 238, 0.15);
@@ -94,7 +94,7 @@ body {
    Red & Orange - Bold energy
    =========================== */
 .theme-crimson-pulse {
-  --bg: #0f0a0a;
+  --bg: #000000;
   --surface: #1a1010;
   --surface-hover: #261616;
   --border: rgba(239, 68, 68, 0.15);
@@ -114,7 +114,7 @@ body {
    Green & Teal - Nature tech
    =========================== */
 .theme-emerald-drift {
-  --bg: #0a0f0a;
+  --bg: #000000;
   --surface: #101a14;
   --surface-hover: #162620;
   --border: rgba(16, 185, 129, 0.15);
@@ -134,7 +134,7 @@ body {
    Blue & Lavender - Cool minimal
    =========================== */
 .theme-moonlight-frost {
-  --bg: #0a0a0f;
+  --bg: #000000;
   --surface: #14141a;
   --surface-hover: #1f1f26;
   --border: rgba(139, 158, 255, 0.15);
@@ -154,7 +154,7 @@ body {
    Purple & Gold - Premium
    =========================== */
 .theme-astral-dream {
-  --bg: #0f0a0f;
+  --bg: #000000;
   --surface: #1a141a;
   --surface-hover: #251e26;
   --border: rgba(168, 85, 247, 0.15);
@@ -194,7 +194,7 @@ body {
    Warm muted tones - Natural elegance
    =========================== */
 .theme-rose-pine {
-  --bg: #191724;
+  --bg: #000000;
   --surface: #1f1d2e;
   --surface-hover: #26233a;
   --border: rgba(110, 106, 134, 0.3);
