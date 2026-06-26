@@ -189,6 +189,14 @@ body {
   --success: #22c55e;
 }
 
+/* Edge case fixes for Obsidian Mono (white on white parallax) */
+body.theme-obsidian-mono .empty-state-btn,
+body.theme-obsidian-mono .shortcut-usage-badge,
+body.theme-obsidian-mono .modal-footer button.primary,
+body.theme-obsidian-mono .button:not(.secondary) {
+  color: #000000 !important;
+}
+
 /* ===========================
    THEME: ROSÉ PINE
    Warm muted tones - Natural elegance
