@@ -1,7 +1,7 @@
 {
   "name": "seekai-extension",
   "version": "1.0.0",
-  "description": "Intelligent search across your digital world - anime cyber command palette",
+  "description": "A premium, highly customizable new tab dashboard featuring dynamic dark mode themes, an elegant search bar, and instant bookmark access.",
   "type": "module",
   "scripts": {
     "dev": "vite",
