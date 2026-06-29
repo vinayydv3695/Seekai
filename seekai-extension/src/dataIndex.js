@@ -267,7 +267,8 @@ class DataIndexer {
         return '';
       }
       
-      return `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=64`;
+      // Use Chrome's native local favicon cache (100% accurate for visited/bookmarked sites)
+      return `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(url)}&size=32`;
     } catch (error) {
       return '';
     }
