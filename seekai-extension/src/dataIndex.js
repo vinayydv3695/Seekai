@@ -267,7 +267,7 @@ class DataIndexer {
         return '';
       }
       
-      return `https://icon.horse/icon/${urlObj.hostname}`;
+      return `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=64`;
     } catch (error) {
       return '';
     }
