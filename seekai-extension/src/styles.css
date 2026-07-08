@@ -59,11 +59,12 @@ body::before {
   height: 100vh;
   z-index: -1;
   background-image: 
-    radial-gradient(circle at 15% 50%, color-mix(in srgb, var(--accent) 6%, transparent) 0%, transparent 40%),
-    radial-gradient(circle at 85% 30%, color-mix(in srgb, var(--accent-2, var(--accent)) 5%, transparent) 0%, transparent 45%),
-    radial-gradient(circle at 50% 90%, color-mix(in srgb, var(--accent) 4%, transparent) 0%, transparent 40%);
+    radial-gradient(circle at calc(15% + var(--mouse-x, 0px)) calc(50% + var(--mouse-y, 0px)), color-mix(in srgb, var(--accent) 6%, transparent) 0%, transparent 40%),
+    radial-gradient(circle at calc(85% - var(--mouse-x, 0px)) calc(30% - var(--mouse-y, 0px)), color-mix(in srgb, var(--accent-2, var(--accent)) 5%, transparent) 0%, transparent 45%),
+    radial-gradient(circle at calc(50% - var(--mouse-x, 0px)*0.5) calc(90% + var(--mouse-y, 0px)*0.5), color-mix(in srgb, var(--accent) 4%, transparent) 0%, transparent 40%);
   filter: blur(80px);
   pointer-events: none;
+  transition: background-image 0.2s ease-out;
 }
 
 /* ===========================
@@ -920,4 +921,42 @@ mark.match-highlight {
 
 .modal-footer button.primary:hover {
   opacity: 0.9;
+}
+
+/* ===========================
+   Seekai 2.0 Feature Styles
+   =========================== */
+
+/* Widgets */
+.widgets-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+
+
+
+
+/* Search Mode Pill */
+.search-mode-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--accent);
+  color: white;
+  margin-right: 8px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Calculator specific styles */
+.result-item.calc-result .result-title {
+  font-family: monospace;
+  font-size: 20px;
+  color: var(--accent);
 }

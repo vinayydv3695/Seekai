@@ -3,9 +3,9 @@
 </p>
 
 <p align="center">
-	<a href="https://github.com/vinayydv3695/Seekai/stargazers"><img src="https://img.shields.io/github/stars/vinayydv3695/Seekai?colorA=363a4f&colorB=b7bdf8&style=for-the-badge"></a>
-	<a href="https://github.com/vinayydv3695/Seekai/issues"><img src="https://img.shields.io/github/issues/vinayydv3695/Seekai?colorA=363a4f&colorB=f5a97f&style=for-the-badge"></a>
-	<a href="https://github.com/vinayydv3695/Seekai/contributors"><img src="https://img.shields.io/github/contributors/vinayydv3695/Seekai?colorA=363a4f&colorB=a6da95&style=for-the-badge"></a>
+	<a href="https://github.com/vinayydv3695/Pinboard/stargazers"><img src="https://img.shields.io/github/stars/vinayydv3695/Pinboard?colorA=363a4f&colorB=b7bdf8&style=for-the-badge"></a>
+	<a href="https://github.com/vinayydv3695/Pinboard/issues"><img src="https://img.shields.io/github/issues/vinayydv3695/Pinboard?colorA=363a4f&colorB=f5a97f&style=for-the-badge"></a>
+	<a href="https://github.com/vinayydv3695/Pinboard/contributors"><img src="https://img.shields.io/github/contributors/vinayydv3695/Pinboard?colorA=363a4f&colorB=a6da95&style=for-the-badge"></a>
 </p>
 
 > A fast, minimal browser extension that replaces your new tab page with a powerful search interface for bookmarks and open tabs.

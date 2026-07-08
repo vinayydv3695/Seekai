@@ -16,7 +16,7 @@ if (!isFirefox && !window.location.search.includes('focus')) {
   window.location.replace(window.location.href + '?focus=1');
 }
 
-class SeekaiApp {
+class PinboardApp {
   constructor() {
     this.fuzzyEngine = new FuzzyEngine();
     this.dataIndexer = new DataIndexer();
@@ -60,16 +60,39 @@ class SeekaiApp {
       // Ensure search input is focused after everything loads
       this.uiController.focusSearchInput();
 
+      // Initialize clock and parallax
+      this.initExtraFeatures();
+
       // Auto-refresh data periodically
       this.startAutoRefresh();
 
     } catch (error) {
-      console.error('Failed to initialize Seekai:', error);
+      console.error('Failed to initialize Pinboard:', error);
       if (this.uiController.elements.loadingOverlay) {
         this.uiController.hideLoading();
       }
       this.showError('Failed to initialize. Please refresh the page.');
     }
+  }
+
+  /**
+   * Initialize Seekai 2.0 Extra Features (Clock, Parallax, Quick Links)
+   */
+  initExtraFeatures() {
+
+    // 2. Parallax Aura
+    document.addEventListener('mousemove', (e) => {
+      // Calculate cursor position relative to center of screen (from -1 to 1)
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+      
+      // Move background subtly in opposite direction
+      document.body.style.backgroundPosition = `${50 - (x * 2)}% ${50 - (y * 2)}%`;
+      
+      // We can't directly transform pseudo-elements in JS, but we can set CSS variables!
+      document.body.style.setProperty('--mouse-x', `${-x * 20}px`);
+      document.body.style.setProperty('--mouse-y', `${-y * 20}px`);
+    });
   }
 
   /**
@@ -194,6 +217,18 @@ class SeekaiApp {
    * @param {string} query - Search query
    */
   async handleSearch(query) {
+    // 1. Check for Bangs
+    if (query.startsWith('!yt ')) {
+      this.uiController.setSearchMode('youtube');
+      return;
+    } else if (query.startsWith('!g ')) {
+      this.uiController.setSearchMode('google');
+      return;
+    } else if (query.startsWith('!w ')) {
+      this.uiController.setSearchMode('wikipedia');
+      return;
+    }
+
     if (!query || query.trim() === '') {
       // Show recent items when no query
       await this.renderInitialState();
@@ -283,10 +318,21 @@ class SeekaiApp {
       return;
     }
 
-    const engine = (this.dataIndexer.settings && this.dataIndexer.settings.defaultSearchEngine) || 'google';
+    // Check if a specific search mode is active
+    let engine = (this.dataIndexer.settings && this.dataIndexer.settings.defaultSearchEngine) || 'google';
+    if (this.uiController && this.uiController.state && this.uiController.state.searchMode) {
+      engine = this.uiController.state.searchMode;
+    }
+    
     let searchUrl = '';
 
     switch (engine) {
+      case 'youtube':
+        searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(trimmedQuery)}`;
+        break;
+      case 'wikipedia':
+        searchUrl = `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(trimmedQuery)}`;
+        break;
       case 'duckduckgo':
         searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
         break;
@@ -390,10 +436,10 @@ class SeekaiApp {
 // Initialize app when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    const app = new SeekaiApp();
+    const app = new PinboardApp();
     app.init();
   });
 } else {
-  const app = new SeekaiApp();
+  const app = new PinboardApp();
   app.init();
 }

@@ -248,6 +248,26 @@ class UIController {
     const { key } = e;
 
     switch (key) {
+      case 'Backspace':
+        if (this.elements.searchInput.value === '' && this.state.searchMode) {
+          e.preventDefault();
+          this.setSearchMode(null);
+        }
+        break;
+      case 'k':
+      case 'K':
+        if (e.ctrlKey) {
+          e.preventDefault();
+          this.selectPrevious();
+        }
+        break;
+      case 'j':
+      case 'J':
+        if (e.ctrlKey) {
+          e.preventDefault();
+          this.selectNext();
+        }
+        break;
       case 'ArrowDown':
         e.preventDefault();
         this.selectNext();
@@ -270,6 +290,16 @@ class UIController {
 
       case 'Tab':
         e.preventDefault();
+        
+        // Check if we can enter a search mode
+        if (this.state.selectedIndex >= 0 && this.state.selectedIndex < this.state.results.length) {
+          const selectedItem = this.state.results[this.state.selectedIndex].item;
+          if (selectedItem.url && selectedItem.url.includes('youtube.com')) {
+            this.setSearchMode('youtube');
+            return;
+          }
+        }
+        
         if (e.shiftKey) {
           this.selectPrevious();
         } else {
@@ -277,6 +307,33 @@ class UIController {
         }
         break;
     }
+  }
+
+  /**
+   * Enter a specific search mode (e.g. YouTube)
+   */
+  setSearchMode(engine) {
+    this.state.searchMode = engine;
+    const pill = document.getElementById('searchModePill');
+    if (pill) {
+      if (engine === 'youtube') {
+        pill.textContent = 'YouTube';
+        pill.style.background = '#ff0000';
+        pill.style.display = 'inline-flex';
+      } else if (engine === 'wikipedia') {
+        pill.textContent = 'Wikipedia';
+        pill.style.background = '#555';
+        pill.style.display = 'inline-flex';
+      } else {
+        pill.style.display = 'none';
+      }
+    }
+    
+    // Clear input but keep focus
+    this.elements.searchInput.value = '';
+    this.state.searchQuery = '';
+    this.elements.searchInput.focus();
+    this.clearResults();
   }
 
   /**

@@ -172,7 +172,7 @@ class DataIndexer {
       const tabs = await chrome.tabs.query({});
       
       this.cache.tabs = tabs
-        .filter(tab => tab.url && tab.title && tab.title !== 'Seekai' && !tab.url.includes('newtab.html'))
+        .filter(tab => tab.url && tab.title && tab.title !== 'Pinboard' && !tab.url.includes('newtab.html'))
         .map(tab => ({
           id: tab.id,
           title: tab.title || 'Untitled',
