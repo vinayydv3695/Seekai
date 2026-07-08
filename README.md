@@ -1,6 +1,14 @@
-# Seekai
+<p align="center">
+  <img src="seekai-extension/icons/icon128.png" alt="Pinboard Logo" width="128">
+</p>
 
-A fast, minimal browser extension that replaces your new tab page with a powerful search interface for bookmarks and open tabs.
+<p align="center">
+	<a href="https://github.com/vinayydv3695/Seekai/stargazers"><img src="https://img.shields.io/github/stars/vinayydv3695/Seekai?colorA=363a4f&colorB=b7bdf8&style=for-the-badge"></a>
+	<a href="https://github.com/vinayydv3695/Seekai/issues"><img src="https://img.shields.io/github/issues/vinayydv3695/Seekai?colorA=363a4f&colorB=f5a97f&style=for-the-badge"></a>
+	<a href="https://github.com/vinayydv3695/Seekai/contributors"><img src="https://img.shields.io/github/contributors/vinayydv3695/Seekai?colorA=363a4f&colorB=a6da95&style=for-the-badge"></a>
+</p>
+
+> A fast, minimal browser extension that replaces your new tab page with a powerful search interface for bookmarks and open tabs.
 
 ## Features
 
@@ -24,7 +32,7 @@ A fast, minimal browser extension that replaces your new tab page with a powerfu
 3. Enable **Developer mode** (toggle in top-right corner)
 4. Click **Load unpacked**
 5. Select the `seekai-extension` folder
-6. Open a new tab - Seekai is now your new tab page!
+6. Open a new tab - Pinboard is now your new tab page!
 
 ### Firefox
 
@@ -32,7 +40,7 @@ A fast, minimal browser extension that replaces your new tab page with a powerfu
 2. Open Firefox and navigate to `about:debugging#/runtime/this-firefox`
 3. Click **Load Temporary Add-on**
 4. Navigate to the `seekai-extension` folder and select `manifest.json`
-5. Open a new tab - Seekai is now your new tab page!
+5. Open a new tab - Pinboard is now your new tab page!
 
 ## Usage
 
@@ -56,7 +64,7 @@ A fast, minimal browser extension that replaces your new tab page with a powerfu
 
 ## Themes
 
-Seekai includes 9 beautiful themes:
+Pinboard includes 9 beautiful themes:
 - Void Core (Default)
 - Sakura Night
 - Neon Sky
